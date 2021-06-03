@@ -1,8 +1,34 @@
-POST http://127.0.0.1:8080/login HTTP/1.1
+GET http://172.25.225.177:5000/item HTTP/1.1
+content-type: application/json
+
+###
+
+POST http://172.25.225.177:5000/item HTTP/1.1
 content-type: application/json
 
 {
-    "id": "100",
-    "username": "ISSuh",
-    "password": "Test"
+    "item": {
+        "time": "20210603",
+        "title": "Test",
+        "works": [
+            {
+                "content": "test1",
+                "done": false
+            },
+            {
+                "content": "test2",
+                "done": true
+            }
+        ]
+    }
 }
+
+###
+
+GET http://172.25.225.177:5000/item HTTP/1.1
+content-type: application/json
+
+###
+
+GET http://172.25.225.177:5000/item/0 HTTP/1.1
+content-type: application/json
