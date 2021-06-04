@@ -30,5 +30,10 @@ content-type: application/json
 
 ###
 
-GET http://172.25.225.177:5000/item/0 HTTP/1.1
+GET http://172.25.225.177:5000/item/1 HTTP/1.1
+content-type: application/json
+
+###
+
+DELETE  http://172.25.225.177:5000/item/0 HTTP/1.1
 content-type: application/json

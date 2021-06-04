@@ -2,7 +2,6 @@ package handle
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -69,9 +68,6 @@ func (app *TodoHandle) GetItem(res http.ResponseWriter, req *http.Request) {
 func (app *TodoHandle) PostItem(res http.ResponseWriter, req *http.Request) {
 	todoItem := todo.TodoItem{}
 	err := json.NewDecoder(req.Body).Decode(&todoItem)
-
-	fmt.Println(todoItem)
-
 	if err != nil {
 		http.Error(res, err.Error(), http.StatusBadRequest)
 		return

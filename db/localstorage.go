@@ -3,6 +3,7 @@ package db
 import (
 	"container/list"
 	"errors"
+	"fmt"
 
 	"github.com/ISSuh/go-todo/todo"
 )
@@ -29,7 +30,6 @@ func (s *LocalStorage) GetItem(itemId int) (*todo.TodoItem, error) {
 
 func (s *LocalStorage) GetItemList() (todo.TodoItemList, error) {
 	var todoItems []todo.TodoItem
-
 	for e := s.ItemLists.Front(); e != nil; e = e.Next() {
 		todoItems = append(todoItems, e.Value.(todo.TodoItem))
 	}
@@ -38,13 +38,8 @@ func (s *LocalStorage) GetItemList() (todo.TodoItemList, error) {
 }
 
 func (s *LocalStorage) AddItem(item todo.TodoItem) (int, error) {
-	var todoItem todo.TodoItem
-
-	index := s.ItemLists.Len()
-
-	item.Id = index
-
-	s.ItemLists.PushBack(todoItem)
+	item.Id = s.ItemLists.Len()
+	s.ItemLists.PushBack(item)
 	return index, nil
 }
 
@@ -55,11 +50,14 @@ func (s *LocalStorage) DeleteItem(itemId int) error {
 	}
 
 	s.ItemLists.Remove(node)
+
 	return nil
 }
 
 func findItem(itemList *list.List, id int) *list.Element {
-	node := itemList.Front()
+	var node *list.Element
+	node = nil
+
 	for e := itemList.Front(); e != nil; e = e.Next() {
 		todoItem := e.Value.(todo.TodoItem)
 		if todoItem.Id == id {
@@ -67,8 +65,13 @@ func findItem(itemList *list.List, id int) *list.Element {
 		}
 	}
 
-	if node == itemList.Front() {
-		return nil
-	}
 	return node
+}
+
+func printItems(itemList *list.List) {
+	fmt.Println("---------------------------------")
+	for e := itemList.Front(); e != nil; e = e.Next() {
+		todoItem := e.Value.(todo.TodoItem)
+		fmt.Println(todoItem)
+	}
 }
