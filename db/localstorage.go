@@ -3,7 +3,6 @@ package db
 import (
 	"container/list"
 	"errors"
-	"fmt"
 
 	"github.com/ISSuh/go-todo/todo"
 )
@@ -18,7 +17,7 @@ func (s *LocalStorage) InitLocalStorage() error {
 }
 
 func (s *LocalStorage) GetItem(itemId int) (*todo.TodoItem, error) {
-	node := findItem(s.ItemLists, itemId)
+	node := FindItem(s.ItemLists, itemId)
 	if node == nil {
 		return nil, errors.New("Invalid Item id")
 	}
@@ -30,6 +29,7 @@ func (s *LocalStorage) GetItem(itemId int) (*todo.TodoItem, error) {
 
 func (s *LocalStorage) GetItemList() (todo.TodoItemList, error) {
 	var todoItems []todo.TodoItem
+
 	for e := s.ItemLists.Front(); e != nil; e = e.Next() {
 		todoItems = append(todoItems, e.Value.(todo.TodoItem))
 	}
@@ -40,11 +40,11 @@ func (s *LocalStorage) GetItemList() (todo.TodoItemList, error) {
 func (s *LocalStorage) AddItem(item todo.TodoItem) (int, error) {
 	item.Id = s.ItemLists.Len()
 	s.ItemLists.PushBack(item)
-	return index, nil
+	return item.Id, nil
 }
 
 func (s *LocalStorage) DeleteItem(itemId int) error {
-	node := findItem(s.ItemLists, itemId)
+	node := FindItem(s.ItemLists, itemId)
 	if node == nil {
 		return errors.New("Invalid Item id")
 	}
@@ -54,7 +54,7 @@ func (s *LocalStorage) DeleteItem(itemId int) error {
 	return nil
 }
 
-func findItem(itemList *list.List, id int) *list.Element {
+func FindItem(itemList *list.List, id int) *list.Element {
 	var node *list.Element
 	node = nil
 
@@ -66,12 +66,4 @@ func findItem(itemList *list.List, id int) *list.Element {
 	}
 
 	return node
-}
-
-func printItems(itemList *list.List) {
-	fmt.Println("---------------------------------")
-	for e := itemList.Front(); e != nil; e = e.Next() {
-		todoItem := e.Value.(todo.TodoItem)
-		fmt.Println(todoItem)
-	}
 }
