@@ -14,6 +14,7 @@ implement simple todo api server using golang
 ### Example
 
 #### GET /item
+---
 
 #### Response
 
@@ -42,6 +43,7 @@ implement simple todo api server using golang
 ```
 
 #### POST /item
+---
 
 #### Request
 
@@ -75,6 +77,7 @@ implement simple todo api server using golang
 ```
 
 #### GET /item/:id
+---
 
 #### Response
 
@@ -99,6 +102,7 @@ implement simple todo api server using golang
 ```
 
 #### DELETE /item/:id
+---
 
 #### Response
 

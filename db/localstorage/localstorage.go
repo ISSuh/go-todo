@@ -8,6 +8,7 @@ import (
 )
 
 type LocalStorage struct {
+	User      *list.List
 	ItemLists *list.List
 }
 

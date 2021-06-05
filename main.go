@@ -14,6 +14,7 @@ func main() {
 	app.Initialize()
 
 	router := mux.NewRouter()
+	router.HandleFunc("/login", app.Login)
 	router.HandleFunc("/item", app.TodoItem)
 	router.HandleFunc("/item/{id}", app.TodoItemById)
 
