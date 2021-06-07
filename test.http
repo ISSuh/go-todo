@@ -37,3 +37,13 @@ content-type: application/json
 
 DELETE  http://172.25.225.177:5000/item/0 HTTP/1.1
 content-type: application/json
+
+###
+
+DELETE  http://172.26.43.253:5000/login HTTP/1.1
+content-type: application/json
+
+{
+    "email" : "test",
+    "password" : "test"
+}

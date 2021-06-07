@@ -1,16 +1,14 @@
-package db
+package localstorage
 
 import (
 	"encoding/json"
 	"reflect"
 	"testing"
-
-	"github.com/ISSuh/go-todo/todo"
 )
 
 var todoItemJson = string(`{"item": {"time": "20210603", "title": "Test", "works": [{"content": "test1", "done": false}, {"content": "test2", "done": true}]}}`)
 
-var todoItem = todo.TodoItem{}
+var todoItem = TodoItem{}
 
 func TestAddItem(t *testing.T) {
 	storage := LocalStorage{}

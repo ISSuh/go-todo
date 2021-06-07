@@ -4,13 +4,13 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/ISSuh/go-todo/todo/handle"
+	"github.com/ISSuh/go-todo/todo"
 
 	"github.com/gorilla/mux"
 )
 
 func main() {
-	app := handle.TodoHandle{}
+	app := todo.TodoHandle{}
 	app.Initialize()
 
 	router := mux.NewRouter()

@@ -1,32 +1,29 @@
 package db
 
-import (
-	"github.com/ISSuh/go-todo/todo"
-)
-
 // Storage for user account
 type AccountStorage interface {
-	InitLocalAccountStorage()
+	InitLocalAccountStorage() error
 
-	CreateAccount(user auth.User) error
-	DeleteAccount(user auth.User) error
-	AccessAccount(user auth.User) error
+	CreateAccount(user Account) error
+	DeleteAccount(user Account) error
+	AccessAccount(user User) Account
 }
 
-// Storage for active session 
-type SessionStorage interface() {
-	InitLocalSessiontStorage()
+// Storage for active session
+type SessionStorage interface {
+	InitLocalSessiontStorage() error
 
-	AddSession(session auth.Session) error
-	DeleteSession(user auth.User) error
-	FindSession(user auth.User) error
+	CreateSession(user User) error
+	DeleteSession(session Session) error
+	FindSession(session Session) error
 }
 
-// 
+// Storage for todo contents
 type ContentStorage interface {
 	InitLocalContentStorage() error
-	GetItem(itemId int) (*todo.TodoItem, error)
-	GetItemList() (todo.TodoItemList, error)
-	AddItem(item todo.TodoItem) (int, error)
+
+	GetItem(itemId int) (*TodoItem, error)
+	GetItemList() (TodoItemList, error)
+	AddItem(item TodoItem) (int, error)
 	DeleteItem(itemId int) error
 }

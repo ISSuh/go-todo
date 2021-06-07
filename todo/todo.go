@@ -1,11 +1,11 @@
-package handle
+package todo
 
 import (
 	"encoding/json"
 	"net/http"
 	"strconv"
 
-	"github.com/ISSuh/go-todo/todo"
+	"github.com/ISSuh/go-todo/db"
 
 	"github.com/gorilla/mux"
 )
@@ -38,7 +38,7 @@ func (app *TodoHandle) GetItem(res http.ResponseWriter, req *http.Request) {
 
 	todoItem, err := app.Contents.GetItem(id)
 	if err != nil {
-		result, _ := json.MarshalIndent(Result{Status: false, Err: err.Error()}, "", "  ")
+		result, _ := json.MarshalIndent(Result{Status: 400, Err: err.Error()}, "", "  ")
 		res.Write([]byte(result))
 		return
 	}
@@ -48,7 +48,7 @@ func (app *TodoHandle) GetItem(res http.ResponseWriter, req *http.Request) {
 }
 
 func (app *TodoHandle) PostItem(res http.ResponseWriter, req *http.Request) {
-	todoItem := todo.TodoItem{}
+	todoItem := db.TodoItem{}
 	err := json.NewDecoder(req.Body).Decode(&todoItem)
 	if err != nil {
 		http.Error(res, err.Error(), http.StatusBadRequest)
@@ -57,12 +57,12 @@ func (app *TodoHandle) PostItem(res http.ResponseWriter, req *http.Request) {
 
 	id, err := app.Contents.AddItem(todoItem)
 	if err != nil {
-		result, _ := json.MarshalIndent(Result{Status: false, Id: id, Err: err.Error()}, "", "  ")
+		result, _ := json.MarshalIndent(Result{Status: 400, Id: id, Err: err.Error()}, "", "  ")
 		res.Write([]byte(result))
 		return
 	}
 
-	result, _ := json.MarshalIndent(Result{Status: true, Id: id}, "", "  ")
+	result, _ := json.MarshalIndent(Result{Status: 200, Id: id}, "", "  ")
 	res.Write([]byte(result))
 }
 
@@ -72,12 +72,12 @@ func (app *TodoHandle) DeleteItem(res http.ResponseWriter, req *http.Request) {
 
 	err := app.Contents.DeleteItem(id)
 	if err != nil {
-		result, _ := json.MarshalIndent(Result{Status: false, Id: id, Err: err.Error()}, "", "  ")
+		result, _ := json.MarshalIndent(Result{Status: 400, Id: id, Err: err.Error()}, "", "  ")
 		res.Write([]byte(result))
 		return
 	}
 
-	result, _ := json.MarshalIndent(Result{Status: true, Id: id}, "", "  ")
+	result, _ := json.MarshalIndent(Result{Status: 200, Id: id}, "", "  ")
 	res.Write([]byte(result))
 }
 

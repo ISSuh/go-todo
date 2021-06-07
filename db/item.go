@@ -1,4 +1,4 @@
-package todo
+package db
 
 type Work struct {
 	Content string `json: "content"`

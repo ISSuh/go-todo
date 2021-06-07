@@ -22,17 +22,17 @@ type Token struct {
 	RefreshToken string `json: "refresh_token"`
 }
 
-func CreateToken(user *User) (*Token, error) {
+func CreateToken(email string) (*Token, error) {
 	var err error
 	accessToken := ""
 	refreshToken := ""
 
-	accessToken, err = createAccessToken(user.Email)
+	accessToken, err = createAccessToken(email)
 	if err != nil {
 		return nil, err
 	}
 
-	refreshToken, err = createRefreshToken(user.Email)
+	refreshToken, err = createRefreshToken(email)
 	if err != nil {
 		return nil, err
 	}
@@ -41,6 +41,16 @@ func CreateToken(user *User) (*Token, error) {
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
 	}, nil
+}
+
+func ExtractToken(req *http.Request) (string, error) {
+	signedToken := extractTokenString(req)
+	claims, err := verifyToken(signedToken)
+	if err != nil {
+		return "", err
+	}
+
+	return claims.Email, nil
 }
 
 func createAccessToken(userEmail string) (string, error) {
@@ -73,16 +83,6 @@ func createRefreshToken(userEmail string) (string, error) {
 		return "", err
 	}
 	return signedRefreshToken, nil
-}
-
-func ExtractToken(req *http.Request) (string, error) {
-	signedToken := extractTokenString(req)
-	claims, err := verifyToken(signedToken)
-	if err != nil {
-		return "", err
-	}
-
-	return claims.Email, nil
 }
 
 func verifyToken(signedToken string) (*Claim, error) {
