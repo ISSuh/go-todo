@@ -2,8 +2,6 @@ package auth
 
 import (
 	"errors"
-	"net/http"
-	"strings"
 	"time"
 
 	jwt "github.com/dgrijalva/jwt-go"
@@ -22,17 +20,17 @@ type Token struct {
 	RefreshToken string `json: "refresh_token"`
 }
 
-func CreateToken(email string) (*Token, error) {
+func CreateTokenPair(email string) (*Token, error) {
 	var err error
 	accessToken := ""
 	refreshToken := ""
 
-	accessToken, err = createAccessToken(email)
+	accessToken, err = CreateAccessToken(email)
 	if err != nil {
 		return nil, err
 	}
 
-	refreshToken, err = createRefreshToken(email)
+	refreshToken, err = CreateRefreshToken(email)
 	if err != nil {
 		return nil, err
 	}
@@ -43,8 +41,19 @@ func CreateToken(email string) (*Token, error) {
 	}, nil
 }
 
-func ExtractToken(req *http.Request) (string, error) {
-	signedToken := extractTokenString(req)
+func ValidateToken(signedToken string) error {
+	claims, err := parseSignedToken(signedToken)
+	if err != nil {
+		return err
+	}
+
+	if err = checkTokenExpires(claims); err != nil {
+		return err
+	}
+	return nil
+}
+
+func ExtractToken(signedToken string) (string, error) {
 	claims, err := verifyToken(signedToken)
 	if err != nil {
 		return "", err
@@ -53,7 +62,7 @@ func ExtractToken(req *http.Request) (string, error) {
 	return claims.Email, nil
 }
 
-func createAccessToken(userEmail string) (string, error) {
+func CreateAccessToken(userEmail string) (string, error) {
 	claims := &Claim{
 		Email: userEmail,
 		StandardClaims: jwt.StandardClaims{
@@ -69,7 +78,7 @@ func createAccessToken(userEmail string) (string, error) {
 	return signedAccessToken, nil
 }
 
-func createRefreshToken(userEmail string) (string, error) {
+func CreateRefreshToken(userEmail string) (string, error) {
 	claims := &Claim{
 		Email: userEmail,
 		StandardClaims: jwt.StandardClaims{
@@ -94,18 +103,7 @@ func verifyToken(signedToken string) (*Claim, error) {
 	if err = checkTokenExpires(claims); err != nil {
 		return nil, err
 	}
-
 	return claims, nil
-}
-
-func extractTokenString(r *http.Request) string {
-	tockenHeader := r.Header.Get("Authorization")
-
-	strArr := strings.Split(tockenHeader, " ")
-	if len(strArr) == 2 {
-		return strArr[1]
-	}
-	return ""
 }
 
 func parseSignedToken(signedToken string) (*Claim, error) {

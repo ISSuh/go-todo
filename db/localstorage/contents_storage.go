@@ -3,6 +3,7 @@ package localstorage
 import (
 	"container/list"
 	"errors"
+	"fmt"
 
 	"github.com/ISSuh/go-todo/db"
 )
@@ -45,15 +46,20 @@ func (s *LocalStorage) DeleteItem(itemId int) error {
 }
 
 func findContents(itemList *list.List, id int) *list.Element {
-	var node *list.Element
-	node = nil
-
+	var node *list.Element = nil
 	for e := itemList.Front(); e != nil; e = e.Next() {
 		todoItem := e.Value.(db.TodoItem)
 		if todoItem.Id == id {
 			node = e
 		}
 	}
-
 	return node
+}
+
+func printForDebuggingOnContents(itemList *list.List) {
+	fmt.Println("-----------------------")
+	for e := itemList.Front(); e != nil; e = e.Next() {
+		todoItem := e.Value.(db.TodoItem)
+		fmt.Println(todoItem)
+	}
 }

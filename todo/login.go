@@ -17,10 +17,22 @@ func (app *TodoHandle) Login(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	account := app.Accounts.AccessAccount(user)
+	session, _ := app.Sessions.GetSession(user)
+	if session == nil {
+		token, _ := auth.CreateTokenPair(user.Email)
 
-	token, _ := auth.CreateToken(account.User.Email)
-	session := db.Session{User: user, Token: *token}
+		session = &db.Session{
+			User:  user,
+			Token: *token,
+		}
+
+		app.Sessions.AddSession(*session)
+	} else {
+		if updateTokenPair(session) != nil {
+			http.Error(res, err.Error(), http.StatusInternalServerError)
+			return
+		}
+	}
 
 	accessTokenCookie := http.Cookie{
 		Name:     "access_token",
@@ -29,13 +41,26 @@ func (app *TodoHandle) Login(res http.ResponseWriter, req *http.Request) {
 	}
 
 	refreshTokenCookie := http.Cookie{
-		Name:     "access_token",
+		Name:     "refresh_token",
 		Value:    session.Token.RefreshToken,
 		HttpOnly: true,
 	}
 
 	res.Header().Set("Set-Cookie", accessTokenCookie.String())
 	res.Header().Add("Set-Cookie", refreshTokenCookie.String())
+
+	result, _ := json.MarshalIndent(Result{Status: 200}, "", "  ")
+	res.Write([]byte(result))
+}
+
+func (app *TodoHandle) Logout(res http.ResponseWriter, req *http.Request) {
+	user := db.User{}
+
+	err := json.NewDecoder(req.Body).Decode(&user)
+	if err != nil {
+		http.Error(res, err.Error(), http.StatusBadRequest)
+		return
+	}
 
 	result, _ := json.MarshalIndent(Result{Status: 200}, "", "  ")
 	res.Write([]byte(result))

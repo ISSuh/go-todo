@@ -5,12 +5,31 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/ISSuh/go-todo/auth"
 	"github.com/ISSuh/go-todo/db"
 
 	"github.com/gorilla/mux"
 )
 
 func (app *TodoHandle) TodoItem(res http.ResponseWriter, req *http.Request) {
+	signedAccessTocken, signedRefreshToken := extractTokenString(req)
+
+	if err := auth.ValidateToken(signedRefreshToken); err != nil {
+		http.Error(res, err.Error(), http.StatusUnauthorized)
+		return
+	}
+
+	if err := auth.ValidateToken(signedAccessTocken); err != nil {
+		email, _ := auth.ExtractToken(signedRefreshToken)
+		session, _ := app.Sessions.GetSession(db.User{Email: email})
+		if session == nil {
+			http.Error(res, err.Error(), http.StatusUnauthorized)
+			return
+		}
+
+		updateAccessToken(session)
+	}
+
 	switch req.Method {
 	case "GET":
 		app.GetItemList(res, req)
@@ -22,6 +41,24 @@ func (app *TodoHandle) TodoItem(res http.ResponseWriter, req *http.Request) {
 }
 
 func (app *TodoHandle) TodoItemById(res http.ResponseWriter, req *http.Request) {
+	signedAccessTocken, signedRefreshToken := extractTokenString(req)
+
+	if err := auth.ValidateToken(signedRefreshToken); err != nil {
+		http.Error(res, err.Error(), http.StatusUnauthorized)
+		return
+	}
+
+	if err := auth.ValidateToken(signedAccessTocken); err != nil {
+		email, _ := auth.ExtractToken(signedRefreshToken)
+		session, _ := app.Sessions.GetSession(db.User{Email: email})
+		if session == nil {
+			http.Error(res, err.Error(), http.StatusUnauthorized)
+			return
+		}
+
+		updateAccessToken(session)
+	}
+
 	switch req.Method {
 	case "GET":
 		app.GetItem(res, req)

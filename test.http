@@ -1,9 +1,10 @@
-GET http://172.25.225.177:5000/item HTTP/1.1
+GET http://127.0.0.1:5000/item HTTP/1.1
 content-type: application/json
+Set-Cookie: access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJFbWFpbCI6InRlc3QiLCJleHAiOjE2MjMxNjMzMzh9._NMYLftUYCWWwFPHbxcSOH5NBix2u4vvZyvM_MwT_nc; HttpOnly,refresh_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJFbWFpbCI6InRlc3QiLCJleHAiOjE2MjMyNDg4Mzh9.LJ-Gw5NgwIF6aQD2t7kovToLTM-QpOYTRuG5xARxe3c; HttpOnly
 
 ###
 
-POST http://172.25.225.177:5000/item HTTP/1.1
+POST http://127.0.0.1:5000/item HTTP/1.1
 content-type: application/json
 
 {
@@ -25,22 +26,22 @@ content-type: application/json
 
 ###
 
-GET http://172.25.225.177:5000/item HTTP/1.1
+GET http://127.0.0.1:5000/item HTTP/1.1
 content-type: application/json
 
 ###
 
-GET http://172.25.225.177:5000/item/1 HTTP/1.1
+GET http://127.0.0.1:5000/item/1 HTTP/1.1
 content-type: application/json
 
 ###
 
-DELETE  http://172.25.225.177:5000/item/0 HTTP/1.1
+DELETE  http://127.0.0.1:5000/item/0 HTTP/1.1
 content-type: application/json
 
 ###
 
-DELETE  http://172.26.43.253:5000/login HTTP/1.1
+DELETE  http://127.0.0.1:5000/login HTTP/1.1
 content-type: application/json
 
 {

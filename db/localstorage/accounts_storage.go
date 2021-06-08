@@ -3,6 +3,7 @@ package localstorage
 import (
 	"container/list"
 	"errors"
+	"fmt"
 	"math/rand"
 
 	"github.com/ISSuh/go-todo/db"
@@ -35,15 +36,20 @@ func (s *LocalStorage) AccessAccount(user db.User) db.Account {
 }
 
 func findAccount(accounts *list.List, email string) *list.Element {
-	var node *list.Element
-	node = nil
-
+	var node *list.Element = nil
 	for e := accounts.Front(); e != nil; e = e.Next() {
 		account := e.Value.(db.Account)
 		if account.User.Email == email {
 			node = e
 		}
 	}
-
 	return node
+}
+
+func printForDebuggingOnAccount(accounts *list.List) {
+	fmt.Println("-----------------------")
+	for e := accounts.Front(); e != nil; e = e.Next() {
+		account := e.Value.(db.Account)
+		fmt.Println(account)
+	}
 }

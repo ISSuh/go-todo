@@ -2,7 +2,7 @@ package db
 
 // Storage for user account
 type AccountStorage interface {
-	InitLocalAccountStorage() error
+	InitAccountStorage() error
 
 	CreateAccount(user Account) error
 	DeleteAccount(user Account) error
@@ -11,16 +11,16 @@ type AccountStorage interface {
 
 // Storage for active session
 type SessionStorage interface {
-	InitLocalSessiontStorage() error
+	InitSessionStorage() error
 
-	CreateSession(user User) error
-	DeleteSession(session Session) error
-	FindSession(session Session) error
+	AddSession(session Session) error
+	DeleteSession(user User) error
+	GetSession(user User) (*Session, error)
 }
 
 // Storage for todo contents
 type ContentStorage interface {
-	InitLocalContentStorage() error
+	InitContentStorage() error
 
 	GetItem(itemId int) (*TodoItem, error)
 	GetItemList() (TodoItemList, error)
