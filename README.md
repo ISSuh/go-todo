@@ -1,6 +1,7 @@
 # go-todo
 
-implement simple todo api server using golang
+implement simple todo api server using golang.
+under development.
 
 ## API
 
